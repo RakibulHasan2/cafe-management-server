@@ -4,7 +4,11 @@ const connection = require('../connection')
 const router = express.Router();
 const jwt = require('jsonwebtoken');
 require('dotenv').config();
+var auth = require('../services/authentication')
+var checkRole = require('../services/checkRole')
 
+
+// ---------------------signup new user-----------------
 router.post('/signup', (req, res) => {
     let user = req.body;
     connection.query('SELECT * FROM user WHERE email = ?', [user.email], (err, results) => {
@@ -29,6 +33,7 @@ router.post('/signup', (req, res) => {
     });
 })
 
+//------------------ user login-------------------------
 router.post('/login', (req, res) => {
     let user = req.body;
     connection.query('SELECT * FROM user WHERE email = ?', [user.email], (err, results) => {
@@ -58,5 +63,40 @@ router.post('/login', (req, res) => {
 
 })
 
+//checking role of the user
+router.get('/get',auth.authenticateToken,checkRole.checkRole,(req, res) =>{
+    const query =  "SELECT * FROM user WHERE role = 'user'"
+    connection.query(query, (err, results) =>{
+        if(!err){
+            return res.status(200).json(results)
+        }else{
+            return res.status(500).json(err)
+        }
+    })
+})
+
+//updating the user status
+router.patch('/update',auth.authenticateToken,checkRole.checkRole, (res, req)=>{
+    let user =  req.body
+    var query = "UPDATE user set status=? where id=?";
+    
+    connection.query(query, [user.status, user.id],(err, results) =>{
+        if(!err){
+           if(results.affectedRows == 0){
+            return res.status(404).json({message: "user id doesn't exist"})
+           }
+           return res.status(200).json({message: "user updated successfully"})
+        }else{
+            
+            return res.status(500).json(err)
+        }
+    })
+})
+
+
+//checking jwt token
+router.get('/checkToken', auth.authenticateToken,checkRole.checkRole,(res, req)=>{
+    return res.status(200).json({message: "true"})
+})
 
 module.exports = router;
