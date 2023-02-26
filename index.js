@@ -5,6 +5,7 @@ const userRoute = require('./routes/user')
 const app =  express();
 const categoryRoute = require('./routes/category.js')
 const productRoute = require('./routes/product')
+const billRoute = require('./routes/bill')
 
 
 //middle ware
@@ -14,6 +15,7 @@ app.use(express.json())
 app.use('/user', userRoute)
 app.use('/category', categoryRoute )
 app.use('/product', productRoute )
+app.use('/bill', billRoute )
 
 
 module.exports = app
