@@ -38,3 +38,12 @@ create table bill(
     createBy varchar(255) NOT NULL,
     primary key(id)
 );
+
+-- {
+--     "name": "btec",
+--      "email": "bteh@gmail.com",
+--       "contactNumber": "32323",
+--       "paymentMethod": "cash",
+--         "totalAmount": "123",
+--          "productDetails": "[{\"id\":1, \"name\":\"coffee\", \"price\": 4, \"total\": 44, \"category\": \"cofee\", \"quantity\": \"2\"}]"
+--  }
